@@ -4,7 +4,7 @@
 
 # 🌟 LLM Study Journey
 
-> 👤 Author: [@shangguanjiannan](#)  
+> 👤 Author: [@shangguanjiannan](https://github.com/shangguanjiannan)  
 > 📅 Started: 2025  
 > 🛠️ Last Updated: 2025-07-31  
 > 🧷 Keywords: LLM, Transformer, Fine-tuning, RAG, Inference, Tokenizer
