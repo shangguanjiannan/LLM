@@ -1,0 +1,99 @@
+run_name: 1B-TDDRSIMPLE
+seed: 6198
+dry_run: false
+
+wandb:
+  name: ${run_name}
+  project: olmo-small
+
+model:
+  d_model: 2048
+  n_heads: 16
+  n_layers: 16
+  mlp_ratio: 8
+  weight_tying: true
+  alibi: false
+  rope: true
+  flash_attention: false  # not available on AMD
+  attention_dropout: 0.0
+  attention_layer_norm: false
+  multi_query_attention: false
+  include_bias: false
+  block_type: sequential
+  layer_norm_type: default
+  layer_norm_with_affine: false
+  bias_for_layer_norm: false
+  attention_layer_norm_with_affine: false
+  activation_type: swiglu
+  residual_dropout: 0.0
+  embedding_dropout: 0.0
+  max_sequence_length: 1024
+  vocab_size: 151665
+  embedding_size: 151665
+  eos_token_id: 0
+  pad_token_id: 1
+  init_device: cuda
+  init_fn: mitchell
+
+compile: null  # causes instability on AMD GPUs
+
+optimizer:
+  name: adamw
+  learning_rate: 1.5e-4
+  weight_decay: 0.1
+  betas:
+  - 0.9
+  - 0.95
+  metrics_log_interval: 10
+
+scheduler:
+  name: cosine_with_warmup
+  t_warmup: 2000
+  alpha_f: 0.1
+
+tokenizer:
+  identifier: xxx/OLMo/configs/qwen2.5-7B_tokenizer/tokenizer.json
+  truncate_direction: right
+
+save_folder: xxx/Pretrain/${run_name}
+save_overwrite: true
+# Sharded checkpoints (best for restarts)
+save_interval: 1000
+save_num_checkpoints_to_keep: 9  # 跟FSDP有关
+# Unsharded checkpoints (for final storage)
+save_interval_unsharded: 1000
+save_num_unsharded_checkpoints_to_keep: 5
+
+load_path: null
+
+max_duration: 1ep  # 60G tokens
+global_train_batch_size: 16
+device_train_microbatch_size: 2
+
+precision: amp_bf16
+
+fsdp:
+  wrapping_strategy: null
+  precision: mixed
+
+max_grad_norm: 1.0
+max_grad_norm_ratio: null
+
+speed_monitor:
+  window_size: 20
+
+eval_interval: ${save_interval}
+eval_subset_num_batches: -1
+device_eval_batch_size: ${device_train_microbatch_size}
+
+data:
+  pad_direction: right
+  num_workers: 0
+  drop_last: true
+  pin_memory: true
+  prefetch_factor: 16
+  persistent_workers: true
+  timeout: 0
+  paths:
+    - xxx/dataset_pretrain/en_token/part-03-00000.npy
+    - xxx/dataset_pretrain/en_token/part-07-00000.npy
