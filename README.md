@@ -5,8 +5,10 @@
 # 🌟 大模型学习历程
 
 > 👤 作者: [@shangguanjiannan](https://github.com/shangguanjiannan)  👈 前往主页请点击
+> 
 > 📅 起始时间: 2025-06  
 > 🛠️ 最近更新: 2025-08
+> 
 > 🧷 关键词: LLM, Transformer, 微调, 检索增强生成, 推理部署, Tokenizer  
 
 ## 🧠 学习背景
